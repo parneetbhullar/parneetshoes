@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walkory | Shoes</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
+body{background:#12060c;color:#f5c6d6;}
+nav{background:#2b0f1c;padding:15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
+nav a{color:#f5c6d6;text-decoration:none;margin:8px;font-weight:bold;cursor:pointer;}
+header{background:linear-gradient(135deg,#6b1234,#2b0f1c);text-align:center;padding:90px 20px;}
+header h1{font-size:48px;color:#ff9fc4;}
+header p{margin-top:10px;}
+section{padding:50px 20px;text-align:center;}
+.search-box{max-width:400px;margin:20px auto;}
+.search-box input{width:100%;padding:12px;border-radius:20px;border:none;}
+
+/* PRODUCT GRID */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:25px;max-width:1200px;margin:auto;}
+.product{background:#2b0f1c;padding:15px;border-radius:20px;cursor:pointer;transition:transform .2s;}
+.product:hover{transform:scale(1.05);}
+.product img{width:100%;height:180px;object-fit:cover;border-radius:15px;}
+.product h3{margin-top:10px;}
+.product p{margin:5px 0;}
+.product button{background:#ff5f9e;border:none;padding:10px 15px;border-radius:20px;color:white;margin-top:10px;cursor:pointer;}
+
+/* BOXES */
+.box{background:#2b0f1c;max-width:400px;margin:30px auto;padding:30px;border-radius:20px;}
+.box input{width:100%;padding:12px;margin:10px 0;border-radius:10px;border:none;}
+.box button{width:100%;padding:12px;background:#ff5f9e;border:none;border-radius:20px;color:white;cursor:pointer;}
+
+/* FOOTER */
+footer{background:#2b0f1c;text-align:center;padding:20px;margin-top:30px;}
+
+/* MODAL */
+.modal{display:none;position:fixed;z-index:1000;padding-top:60px;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.9);}
+.modal-content{margin:auto;display:block;width:80%;max-width:700px;}
+.modal-content:hover{cursor:zoom-in;}
+.modal-close{position:absolute;top:20px;right:35px;color:#fff;font-size:40px;font-weight:bold;transition:0.3s;cursor:pointer;}
+.modal-close:hover{color:#ff5f9e;}
+.modal-arrow{position:absolute;top:50%;transform:translateY(-50%);color:#fff;font-size:50px;font-weight:bold;cursor:pointer;padding:10px;}
+.modal-arrow:hover{color:#ff5f9e;}
+#prev{left:10px;} #next{right:10px;}
+@media(max-width:700px){.modal-content{width:100%;}.modal-arrow{font-size:35px;}}
+@media(max-width:600px){header h1{font-size:36px;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <strong>Walkory</strong>
+  <div>
+    <a href="#home">Home</a>
+    <a href="#shop">Shop</a>
+    <a href="#login">Login</a>
+    <a href="#checkout">Checkout</a>
+    <a href="#orders">Orders</a>
+  </div>
+</nav>
+
+<!-- HOME -->
+<header id="home">
+  <h1>Walkory</h1>
+  <p>Dark Style. Bold Steps.</p>
+</header>
+
+<!-- SEARCH -->
+<div class="search-box">
+  <input type="text" id="search" placeholder="Search shoes..." onkeyup="filterProducts()">
+</div>
+
+<!-- SHOP -->
+<section id="shop">
+
+<h2>Men Shoes</h2>
+<div class="products-grid" id="menProducts">
+  <div class="product" onclick="openModal(this,'men')">
+    <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77" alt="Men Shoes">
+    <h3>Men Runner</h3>
+    <p>£65</p>
+    <button onclick="addToCart('Men Runner',65);event.stopPropagation();">Add to Cart</button>
+  </div>
+</div>
+
+<h2>Women Shoes</h2>
+<div class="products-grid" id="womenProducts">
+  <div class="product" onclick="openModal(this,'women')">
+    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772" alt="Women Shoes">
+    <h3>Women Sneaker</h3>
+    <p>£75</p>
+    <button onclick="addToCart('Women Sneaker',75);event.stopPropagation();">Add to Cart</button>
+  </div>
+</div>
+
+<h2>Kids Shoes</h2>
+<div class="products-grid" id="kidsProducts">
+  <div class="product" onclick="openModal(this,'kids')">
+    <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519" alt="Kids Shoes">
+    <h3>Kids Sneaker</h3>
+    <p>£45</p>
+    <button onclick="addToCart('Kids Sneaker',45);event.stopPropagation();">Add to Cart</button>
+  </div>
+</div>
+
+</section>
+
+<!-- CART -->
+<section class="box">
+  <h2>Cart</h2>
+  <p>Items: <span id="count">0</span></p>
+  <p>Total: £<span id="total">0</span></p>
+</section>
+
+<!-- LOGIN -->
+<section id="login" class="box">
+  <h2>Login</h2>
+  <input type="email" placeholder="Email">
+  <input type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</section>
+
+<!-- CHECKOUT -->
+<section id="checkout" class="box">
+  <h2>Check Out</h2>
+  <input type="text" placeholder="Full Name">
+  <input type="text" placeholder="Address">
+  <input type="text" placeholder="Card Number (Demo)">
+  <button onclick="placeOrder()">Pay Now</button>
+</section>
+
+<!-- ORDER HISTORY -->
+<section id="orders" class="box">
+  <h2>Order History</h2>
+  <ul id="orderList"></ul>
+</section>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <span class="modal-close" onclick="closeModal()">&times;</span>
+  <span class="modal-arrow" id="prev" onclick="prevImage()">&#10094;</span>
+  <span class="modal-arrow" id="next" onclick="nextImage()">&#10095;</span>
+  <img class="modal-content" id="modalImg">
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Walkory</p>
+</footer>
+
+<script>
+let cart=[], total=0;
+
+// Add to cart
+function addToCart(name,price){
+  cart.push({name,price});
+  total+=price;
+  document.getElementById('count').innerText=cart.length;
+  document.getElementById('total').innerText=total;
+}
+
+// Dummy login
+function login(){alert("Login demo!");}
+
+// Dummy payment
+function placeOrder(){
+  if(cart.length===0){alert("Cart is empty!"); return;}
+  alert("Payment successful! Order placed.");
+  document.getElementById('orderList').innerHTML+="<li>Order placed: £"+total+"</li>";
+  cart=[]; total=0;
+  document.getElementById('count').innerText='0';
+  document.getElementById('total').innerText='0';
+}
+
+// Search filter
+function filterProducts(){
+  let input=document.getElementById('search').value.toLowerCase();
+  document.querySelectorAll('.product').forEach(p=>{
+    let text=p.querySelector('h3').innerText.toLowerCase();
+    p.style.display=text.includes(input)?'block':'none';
+  });
+}
+
+// MODAL
+let modal=document.getElementById('modal');
+let modalImg=document.getElementById('modalImg');
+let currentImages=[], currentIndex=0;
+
+function openModal(el,category){
+  if(category==='men') currentImages=[...document.querySelectorAll('#menProducts img')];
+  if(category==='women') currentImages=[...document.querySelectorAll('#womenProducts img')];
+  if(category==='kids') currentImages=[...document.querySelectorAll('#kidsProducts img')];
+  currentIndex=currentImages.indexOf(el.querySelector('img'));
+  modal.style.display="block";
+  modalImg.src=currentImages[currentIndex].src;
+}
+
+function closeModal(){modal.style.display="none";}
+function nextImage(){currentIndex=(currentIndex+1)%currentImages.length; modalImg.src=currentImages[currentIndex].src;}
+function prevImage(){currentIndex=(currentIndex-1+currentImages.length)%currentImages.length; modalImg.src=currentImages[currentIndex].src;}
+</script>
+
+</body>
+</html>
